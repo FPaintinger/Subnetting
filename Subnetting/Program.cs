@@ -12,14 +12,17 @@ namespace Subnetting
     {
         static void Main(string[] args)
         {
-            CreateRandomIP();
-            CreateRandomCIDR();
-            CreateRandomSubnetmask();   
+            String random_ip = "";
+            int random_cidr = -1;
+
+            random_ip = CreateRandomDezIP();
+            random_cidr = CreateRandomCIDR();
+            CreateBinSubnetmask(random_cidr);   
             
         }
 
         // Funktion: erstellen einer zufälligen, gültigen IP-Adresse
-        static String CreateRandomIP()
+        static String CreateRandomDezIP()
         {
             String return_IP;
             int num;
@@ -47,25 +50,46 @@ namespace Subnetting
         {
             Random random = new Random();
             int return_CIDR = random.Next(2,32 + 1);
-
             return return_CIDR;
         }
 
-        // Funktion; erstellen einer zufälligen, gültigen Subnetzmaske
-        //
-        static String CreateRandomSubnetmask()
+        // Funktion: erstelle anhand von einem CIDR eine Subnetzmaske in binärform
+        static String CreateBinSubnetmask(int counter)
         {
+            String bin_subnetmask = "";
+            
+            for (int i = 0; i < 31 + 3 + 1 ; i++)
+            {
+                if (i == 8 || i == 17 || i == 26)
+                {
+                    counter++;
+                    bin_subnetmask += ".";
+                }
+                else if(i < counter)
+                {
+                    bin_subnetmask += "1";
+                }
+                else
+                {
+                    bin_subnetmask += "0";
+                }
+                
+            }
+
+            return bin_subnetmask;
+        }
+        // Funktion: erstellen einer Subnetzmaske
+
+        static String CreateDezSubnetmask(int counter)
+        {
+            
             String return_Subnet;
             String num = "0";
             
             int random_int;
+            Random random = new Random();
 
-            
 
-
-            // erstellt eine zufällige Zahl zw. 1 und 8
-            // je nach Zahl, bekommt num einen Wert zugewiesen, der für ein Oktett in der Subnetzmaske steht.
-            // ist der Wert des vorangegangenen Wertes 254 oder kleiner, so sind die Folge-Oktetts Null (0).
             random_int = random.Next(1, 8 + 1);
             
             switch(random_int)
