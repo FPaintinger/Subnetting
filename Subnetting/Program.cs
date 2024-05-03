@@ -57,25 +57,26 @@ namespace Subnetting
         static String CreateBinSubnetmask(int counter)
         {
             String bin_subnetmask = "";
-            
+            // 0-31 (32 Stellen) + 3 (für die Punkte [.] + 1 (weil exklusiv))
             for (int i = 0; i < 31 + 3 + 1 ; i++)
             {
+                // an dem Index 8, 17 & 26 soll ein Punkt entstehen
+                // da diese Stelle dann, statt einer 0 oder 1 vergeben wird, muss der Counter 
+                // hochgesetzt werden, damit nachher noch immer 4 Oktette entstehen
                 if (i == 8 || i == 17 || i == 26)
                 {
                     counter++;
                     bin_subnetmask += ".";
                 }
-                else if(i < counter)
+                else if(i < counter)            // Anzahl der Einsen
                 {
                     bin_subnetmask += "1";
                 }
-                else
+                else                            // Anzahl der Nullen (32-counter)
                 {
                     bin_subnetmask += "0";
-                }
-                
+                }                
             }
-
             return bin_subnetmask;
         }
         // Funktion: erstellen einer Subnetzmaske
