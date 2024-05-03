@@ -51,6 +51,8 @@ namespace Subnetting
             Random random = new Random();
             int random_int;
 
+            // schöner, weil die Wahrscheinlichkeit höher ist, dass nicht nur eine /1-/7 gewählt wird: cidr erstellen random.Next(2, 32 + 1), daraus dann die maske machen
+
 
             // erstellt eine zufällige Zahl zw. 1 und 8
             // je nach Zahl, bekommt num einen Wert zugewiesen, der für ein Oktett in der Subnetzmaske steht.
