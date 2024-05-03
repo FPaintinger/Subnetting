@@ -51,7 +51,8 @@ namespace Subnetting
         static int CreateRandomCIDR()
         {
             Random random = new Random();
-            int return_CIDR = random.Next(2,32 + 1);
+            // random von 2 bis 30 und nicht 32, weil sonst kein Netz (bzw. bei 31: nur 2 Geräte ins Netz passen würden) 
+            int return_CIDR = random.Next(2,30 + 1);
             return return_CIDR;
         }
 
@@ -110,7 +111,7 @@ namespace Subnetting
             }
             lenght = dez_subnetmask.Length;                     // die länge des Strings muss man wissen, damit man das letzte Zeichen (den .) entfernen kann.
             dez_subnetmask = dez_subnetmask.Remove(lenght-1, 1);            
-            //Console.WriteLine(dez_subnetmask);
+            Console.WriteLine(dez_subnetmask);
             return dez_subnetmask;
         }
     }
