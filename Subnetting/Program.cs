@@ -13,12 +13,12 @@ namespace Subnetting
         static void Main(string[] args)
         {
             CreateRandomIP();
+            CreateRandomCIDR();
             CreateRandomSubnetmask();   
             
         }
 
         // Funktion: erstellen einer zufälligen, gültigen IP-Adresse
-        // 
         static String CreateRandomIP()
         {
             String return_IP;
@@ -41,6 +41,15 @@ namespace Subnetting
 
             return return_IP;
         }
+        
+        // Funktion: erstellen eines zufälligen CIDR
+        static int CreateRandomCIDR()
+        {
+            Random random = new Random();
+            int return_CIDR = random.Next(2,32 + 1);
+
+            return return_CIDR;
+        }
 
         // Funktion; erstellen einer zufälligen, gültigen Subnetzmaske
         //
@@ -48,10 +57,10 @@ namespace Subnetting
         {
             String return_Subnet;
             String num = "0";
-            Random random = new Random();
+            
             int random_int;
 
-            // schöner, weil die Wahrscheinlichkeit höher ist, dass nicht nur eine /1-/7 gewählt wird: cidr erstellen random.Next(2, 32 + 1), daraus dann die maske machen
+            
 
 
             // erstellt eine zufällige Zahl zw. 1 und 8
