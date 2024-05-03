@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +14,12 @@ namespace Subnetting
         static void Main(string[] args)
         {
             String random_ip = "";
+            String random_mask = "";
             int random_cidr = -1;
 
             random_ip = CreateRandomDezIP();
             random_cidr = CreateRandomCIDR();
-            CreateBinSubnetmask(random_cidr);   
+            random_mask = CreateDezSubnetmask(random_cidr);   
             
         }
 
@@ -54,118 +56,62 @@ namespace Subnetting
         }
 
         // Funktion: erstelle anhand von einem CIDR eine Subnetzmaske in binärform
-        static String CreateBinSubnetmask(int counter)
+        static String CreateBinSubnetmask(int p_cidr)
         {
             String bin_subnetmask = "";
             // 0-31 (32 Stellen) + 3 (für die Punkte [.] + 1 (weil exklusiv))
             for (int i = 0; i < 31 + 3 + 1 ; i++)
             {
                 // an dem Index 8, 17 & 26 soll ein Punkt entstehen
-                // da diese Stelle dann, statt einer 0 oder 1 vergeben wird, muss der Counter 
+                // da diese Stelle dann, statt einer 0 oder 1 vergeben wird, muss der Counter (p_cidr) 
                 // hochgesetzt werden, damit nachher noch immer 4 Oktette entstehen
                 if (i == 8 || i == 17 || i == 26)
                 {
-                    counter++;
+                    p_cidr++;
                     bin_subnetmask += ".";
                 }
-                else if(i < counter)            // Anzahl der Einsen
+                else if(i < p_cidr)            // Anzahl der Einsen
                 {
                     bin_subnetmask += "1";
                 }
-                else                            // Anzahl der Nullen (32-counter)
+                else                            // Anzahl der Nullen (32-p_cidr)
                 {
                     bin_subnetmask += "0";
                 }                
             }
             return bin_subnetmask;
         }
+
+
         // Funktion: erstellen einer Subnetzmaske
-
-        static String CreateDezSubnetmask(int counter)
+        static String CreateDezSubnetmask(int p_cidr)
         {
+            String dez_subnetmask = "";
+            String bin_mask = CreateBinSubnetmask(p_cidr);
+            double bin = -1;
+            double dez;
+            int lenght = -1;
             
-            String return_Subnet;
-            String num = "0";
-            
-            int random_int;
-            Random random = new Random();
-
-
-            random_int = random.Next(1, 8 + 1);
-            
-            switch(random_int)
+            // erstellt ein Array mit den einzelen Oktetten, die durch einen .(Punkt) getrennt sind
+            String[] oktett = bin_mask.Split('.');
+            foreach(String okt in oktett)                       // jedes einzelne Oktett
             {
-                case 1:
-                    num = "128";
-                    break;
-                case 2:
-                    num = "192";
-                    break;
-                case 3:
-                    num = "224";
-                    break;
-                case 4:
-                    num = "240";
-                    break;
-                case 5:
-                    num = "248";
-                    break;
-                case 6:
-                    num = "252";
-                    break;
-                case 7:
-                    num = "254";
-                    break;
-                case 8:
-                    num = "255";
-                    break;
-            }
-            return_Subnet = num;
-
-            for (int i = 3; i != 0; i--)
-            {
-                if (random_int < 8)
+                int counter = 7;
+                dez = 0;
+                for (int i = 0;i <= 7; i++)                     // durchläuft nun das einzelne Oktett Zeichenweise
                 {
-                    num = "0";
+                    bin = Convert.ToInt16(okt[i]) - 48;         // -48 weil von Char auf Int der ASCCI-Code zurückgegeben wird
+                    dez += (Math.Pow(2, counter)) * bin;        // 2^counter: um die 8 bits in dez umzuwandeln
+                    counter--;                  
                 }
-                else
-                {
-                    random_int = random.Next(1, 8 + 1);
-
-                    switch (random_int)
-                    {
-                        case 1:
-                            num = "128";
-                            break;
-                        case 2:
-                            num = "192";
-                            break;
-                        case 3:
-                            num = "224";
-                            break;
-                        case 4:
-                            num = "240";
-                            break;
-                        case 5:
-                            num = "248";
-                            break;
-                        case 6:
-                            num = "252";
-                            break;
-                        case 7:
-                            num = "254";
-                            break;
-                        case 8:
-                            num = "255";
-                            break;
-                    }
-
-                }
-                return_Subnet = return_Subnet + "." + num;
+                dez_subnetmask += dez + ".";                    // erstellt einen String mit 4 dezimalzahlen, gefolgt von einem Punkt xxx.xxx.xxx.xxx.
+                //Console.WriteLine(okt);
+                //Console.WriteLine(dez);
             }
-            Console.WriteLine(return_Subnet);
-
-            return return_Subnet;
+            lenght = dez_subnetmask.Length;                     // die länge des Strings muss man wissen, damit man das letzte Zeichen (den .) entfernen kann.
+            dez_subnetmask = dez_subnetmask.Remove(lenght-1, 1);            
+            //Console.WriteLine(dez_subnetmask);
+            return dez_subnetmask;
         }
     }
 }
